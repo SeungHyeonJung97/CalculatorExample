@@ -16,15 +16,30 @@ class MainViewModel : ViewModel() {
         val RESULT = 4
         val NONE = 5
     }
+    //    var inputHistory = ""
+    private var _inputHistory = MutableLiveData<String>()
+    val inputHistory: LiveData<String>
+        get() = _inputHistory
 
-    var inputHistory = ""
-    var result = ""
+    //    var result = ""
+    private var _result = MutableLiveData<String>()
+    val result: LiveData<String>
+        get() = _result
+
+    init {
+        _inputHistory.value = ""
+        _result.value = ""
+    }
+
+
+
+
     var num1 = ""
     var num2 = ""
     var expression = NONE
 
     fun inputNumber(number: String) {
-        inputHistory += number
+        _inputHistory.value += number
 
         if(expression == NONE){
             num1 += number
@@ -35,41 +50,46 @@ class MainViewModel : ViewModel() {
         if(num1.isNotEmpty() && num2.isNotEmpty()){
             when(expression){
                 PLUS -> {
-                    result = (num1.toInt() + num2.toInt()).toString()
+                    _result.postValue( (num1.toInt() + num2.toInt()).toString())
                 }
                 MINUS -> {
-                    result = (num1.toInt() - num2.toInt()).toString()
+                    _result.postValue((num1.toInt() - num2.toInt()).toString())
                 }
                 MULTIPLY -> {
-                    result = (num1.toInt() * num2.toInt()).toString()
+                    _result.postValue((num1.toInt() * num2.toInt()).toString())
                 }
                 DIVIDE -> {
-                    result = (num1.toInt() / num2.toInt()).toString()
+                    _result.postValue((num1.toInt() / num2.toInt()).toString())
                 }
             }
         }
     }
 
     fun inputExpression(expression: Int) {
-        if(result.isNotEmpty()){
-            num1 = result
+        if(_result.value!!.isNotEmpty()){
+            num1 = _result.value!!
             num2 = ""
         }
         when (expression) {
             PLUS -> {
-                inputHistory += " + "
+                // inputHistory += " + "
+                _inputHistory.value += " + "
             }
             MINUS -> {
-                inputHistory += " - "
+                // inputHistory += " - "
+                _inputHistory.value += " - "
             }
             MULTIPLY -> {
-                inputHistory += " * "
+                // inputHistory += " * "
+                _inputHistory.value += " * "
             }
             DIVIDE -> {
-                inputHistory += " / "
+                // inputHistory += " / "
+                _inputHistory.value += " / "
             }
             RESULT -> {
-                inputHistory += " = "
+                // inputHistory += " = "
+                _inputHistory.value += " = "
             }
         }
         this.expression = expression

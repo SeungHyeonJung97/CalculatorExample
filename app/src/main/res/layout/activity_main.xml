@@ -19,7 +19,6 @@
             android:layout_height="0dp"
             android:gravity="top"
             android:padding="16dp"
-            android:text="@{viewModel.inputHistory}"
             android:textColor="@color/black"
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toTopOf="@+id/btn_8"

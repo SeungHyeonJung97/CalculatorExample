@@ -24,6 +24,13 @@ class MainActivity : AppCompatActivity() {
         binding.etNumber.setTextIsSelectable(true)
         binding.etNumber.showSoftInputOnFocus = false
 
+        viewModel.inputHistory.observe(this){
+            binding.etNumber.setText(it)
+        }
+
+        viewModel.result.observe(this){
+            binding.tvResult.text = it
+        }
 
         val buttonList = listOf(
             binding.btn0,
@@ -49,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         buttonList.forEachIndexed { index, number ->
             number.setOnClickListener{
                 viewModel.inputNumber(index.toString())
-                binding.invalidateAll()
             }
         }
 
@@ -62,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                     DIVIDE -> { viewModel.inputExpression(DIVIDE) }
                     RESULT -> { viewModel.inputExpression(RESULT) }
                 }
-                binding.invalidateAll()
             }
         }
     }
