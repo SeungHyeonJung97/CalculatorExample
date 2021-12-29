@@ -1,9 +1,14 @@
 package com.ashe.calculatorexample
 
+import android.content.Context
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.CalendarContract
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
 import com.ashe.calculatorexample.MainViewModel.EXPRESSION.DIVIDE
 import com.ashe.calculatorexample.MainViewModel.EXPRESSION.MINUS
 import com.ashe.calculatorexample.MainViewModel.EXPRESSION.MULTIPLY
@@ -15,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -24,11 +30,14 @@ class MainActivity : AppCompatActivity() {
         binding.etNumber.setTextIsSelectable(true)
         binding.etNumber.showSoftInputOnFocus = false
 
-        viewModel.inputHistory.observe(this){
+        viewModel.inputHistory.observe(this) {
             binding.etNumber.setText(it)
+            if(viewModel.num1 != viewModel.inputHistory.value){
+                binding.etNumber.setTextColor(Color.BLACK)
+            }
         }
 
-        viewModel.result.observe(this){
+        viewModel.result.observe(this) {
             binding.tvResult.text = it
         }
 
@@ -54,21 +63,37 @@ class MainActivity : AppCompatActivity() {
         )
 
         buttonList.forEachIndexed { index, number ->
-            number.setOnClickListener{
+            number.setOnClickListener {
                 viewModel.inputNumber(index.toString())
             }
         }
 
         buttonExpressions.forEachIndexed { index, expression ->
             expression.setOnClickListener {
-                when(index){
-                    PLUS -> { viewModel.inputExpression(PLUS) }
-                    MINUS -> { viewModel.inputExpression(MINUS) }
-                    MULTIPLY -> { viewModel.inputExpression(MULTIPLY) }
-                    DIVIDE -> { viewModel.inputExpression(DIVIDE) }
-                    RESULT -> { viewModel.inputExpression(RESULT) }
+                when (index) {
+                    PLUS -> {
+                        viewModel.inputExpression(PLUS)
+                    }
+                    MINUS -> {
+                        viewModel.inputExpression(MINUS)
+                    }
+                    MULTIPLY -> {
+                        viewModel.inputExpression(MULTIPLY)
+                    }
+                    DIVIDE -> {
+                        viewModel.inputExpression(DIVIDE)
+                    }
+                    RESULT -> {
+                        viewModel.saveData()
+                        binding.etNumber.setTextColor(Color.GREEN)
+                    }
                 }
             }
+        }
+
+        binding.btnHistory.setOnClickListener {
+            viewModel.loadData()
+
         }
     }
 }
