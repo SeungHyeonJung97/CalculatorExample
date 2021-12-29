@@ -119,10 +119,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun loadData() {
         var db = HistoryDatabase.getInstance(getApplication())
 
-//        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
 
             val historyList = db.historyDao.getAll()
             historyList.forEach { Log.i("History", "$it") }
-//        }
+        }
     }
 }
